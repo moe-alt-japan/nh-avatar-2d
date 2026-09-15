@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NH Avatar Lab — Boy 1</title>
+<style>
+:root{--ink:#18344d;--blue:#278ff0;--line:#d7e7f3}
+*{box-sizing:border-box} body{margin:0;font-family:Arial,"Noto Sans JP",sans-serif;color:var(--ink);background:linear-gradient(135deg,#eef9ff,#fff9ef)}
+header{height:74px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;box-shadow:0 5px 22px #5672a012}
+.brand{font-size:27px;font-weight:900}.brand small{display:block;font-size:12px;color:#8aa0b4;font-weight:700;letter-spacing:.4px}
+.badge{background:#eff8ff;border:1px solid #cfe7fa;padding:10px 15px;border-radius:14px;font-weight:800}
+main{max-width:1120px;margin:28px auto;padding:0 18px}.title h1{margin:0;font-size:31px}.title p{margin:7px 0 22px;color:#728ca3}
+.lab{display:grid;grid-template-columns:420px 1fr;gap:20px}
+.preview,.panel{background:#fff;border:1px solid var(--line);border-radius:25px;box-shadow:0 15px 40px #41668716}
+.preview{background:linear-gradient(#dff3ff,#f7fcff);padding:18px;display:flex;flex-direction:column}
+.stage{height:530px;display:grid;place-items:center}.stage svg{width:100%;height:100%;filter:drop-shadow(0 15px 10px #47799a22)}
+.caption{text-align:center;font-weight:900;font-size:18px}.caption small{display:block;color:#7790a6;font-size:12px;margin-top:4px}
+.panel{padding:20px}.status{padding:13px 15px;border-radius:14px;background:#effaf2;color:#267342;font-weight:800;margin-bottom:16px}
+.section{border-top:1px solid #e7f0f6;padding:18px 0 4px}.section:first-of-type{border-top:0}.section h3{margin:0 0 11px;font-size:17px}.choices{display:flex;gap:10px;flex-wrap:wrap}
+button{font:inherit}.choice{border:2px solid #dce9f3;background:#fff;border-radius:13px;padding:10px 14px;font-weight:800;color:#35516a;cursor:pointer}.choice:hover{background:#f5fbff}.choice.active{border-color:var(--blue);background:#eaf6ff;color:#126bbd}
+.swatch{width:44px;height:44px;border-radius:50%;border:4px solid #fff;box-shadow:0 0 0 1px #ccdce8;cursor:pointer}.swatch.active{box-shadow:0 0 0 3px var(--blue)}
+.note{margin-top:18px;background:#fff8e8;border:1px solid #f4dfaa;padding:13px 15px;border-radius:14px;font-size:13px;line-height:1.5}
+.layers{font-family:ui-monospace,Consolas,monospace;background:#f6f9fc;border-radius:13px;padding:12px 14px;font-size:12px;line-height:1.6;margin-top:14px}
+@media(max-width:850px){.lab{grid-template-columns:1fr}.stage{height:430px}}
+</style>
+</head>
+<body>
+<header><div class="brand">📚 NH Interactive <small>AVATAR LAB · MASTER CHARACTER TEST</small></div><div class="badge">Boy 1 · Layered SVG</div></header>
+<main>
+<div class="title"><h1>Boy 1 — Alignment Test</h1><p>This is a proof page. Every item below uses the same 300 × 430 coordinate system.</p></div>
+<div class="lab">
+<section class="preview">
+  <div id="stage" class="stage"></div>
+  <div class="caption">Boy 1 <small>Original NH chibi master</small></div>
+</section>
+<section class="panel">
+<div class="status">✓ No VRM · No Three.js · No external image loading</div>
+
+<div class="section"><h3>👕 Clothes</h3><div class="choices" id="clothes"></div></div>
+<div class="section"><h3>🎩 Head</h3><div class="choices" id="head"></div></div>
+<div class="section"><h3>👓 Face accessory</h3><div class="choices" id="faceacc"></div></div>
+<div class="section"><h3>🎒 Back accessory</h3><div class="choices" id="back"></div></div>
+<div class="section"><h3>🧍 Pose</h3><div class="choices" id="pose"></div></div>
+<div class="section"><h3>🖐 Skin tone</h3><div class="choices" id="skin"></div></div>
+
+<div class="note"><b>What we are testing:</b> switch everything repeatedly. The cap must stay on the head, glasses on the eyes, sleeves on the arms, backpack behind the body, and clothes at the same shoulders/waist. If that stays aligned, this is the architecture we can safely expand.</div>
+<div class="layers">LAYER ORDER<br>01 shadow<br>02 backpack<br>03 hair-back<br>04 legs/shoes<br>05 torso/clothes<br>06 arms/hands<br>07 head/ears<br>08 hair-front<br>09 face<br>10 glasses<br>11 cap</div>
+</section>
+</div>
+</main>
+<script>
+const S={clothes:'white',head:'cap',faceacc:'none',back:'pack',pose:'wave',skin:'#f3c39d'};
+const clothes={white:['#fbfcfe','#202632'],blue:['#3b8eea','#202632'],red:['#ed665d','#222a34'],green:['#56ae69','#25323a']};
+const options={
+ clothes:[['white','NH White'],['blue','Blue Hoodie'],['red','Red Tee'],['green','Green Hoodie']],
+ head:[['cap','NH Cap'],['none','No Cap']],
+ faceacc:[['none','None'],['glasses','Glasses']],
+ back:[['pack','Backpack'],['none','None']],
+ pose:[['wave','Wave'],['stand','Stand'],['peace','Peace']]
+};
+const skins=['#f8d2b1','#f3c39d','#dda075','#ad704e','#6f4838'];
+
+function avatar(){
+ const [top,bottom]=clothes[S.clothes];
+ const hoodie=S.clothes!=='red';
+ const sleeve=top;
+ let rArm=`<path d="M207 253 Q225 268 226 302" fill="none" stroke="#263747" stroke-width="30" stroke-linecap="round"/><path d="M207 253 Q225 268 226 302" fill="none" stroke="${sleeve}" stroke-width="24" stroke-linecap="round"/><circle cx="227" cy="309" r="13" fill="${S.skin}" stroke="#263747" stroke-width="3"/>`;
+ if(S.pose==='wave')rArm=`<path d="M205 253 Q224 231 232 199" fill="none" stroke="#263747" stroke-width="30" stroke-linecap="round"/><path d="M205 253 Q224 231 232 199" fill="none" stroke="${sleeve}" stroke-width="24" stroke-linecap="round"/><g transform="translate(235 187) rotate(12)"><path d="M-10 14 Q-17 2 -12 -8 Q-9 -13 -6 -7 L-2 0 L-3 -16 Q-2 -22 2 -17 L4 -2 L8 -18 Q10 -22 12 -16 L10 -1 L15 -14 Q18 -18 19 -11 L15 4 Q13 17 3 21 Q-5 22 -10 14Z" fill="${S.skin}" stroke="#263747" stroke-width="3"/></g>`;
+ if(S.pose==='peace')rArm=`<path d="M205 253 Q224 231 231 204" fill="none" stroke="#263747" stroke-width="30" stroke-linecap="round"/><path d="M205 253 Q224 231 231 204" fill="none" stroke="${sleeve}" stroke-width="24" stroke-linecap="round"/><g transform="translate(234 190)"><circle r="12" fill="${S.skin}" stroke="#263747" stroke-width="3"/><path d="M-3 -8 L-8 -27 M4 -8 L10 -27" stroke="${S.skin}" stroke-width="9" stroke-linecap="round"/><path d="M-3 -8 L-8 -27 M4 -8 L10 -27" stroke="#263747" stroke-width="2" stroke-linecap="round"/></g>`;
+ const pack=S.back==='pack'?`<g id="backpack"><path d="M69 244 Q47 248 43 283 L47 326 Q52 345 76 341 L93 330 L92 252Z" fill="#202936" stroke="#263747" stroke-width="4"/><path d="M62 250 Q74 232 93 242" fill="none" stroke="#263747" stroke-width="9" stroke-linecap="round"/><path d="M51 278h31" stroke="#4d5b69" stroke-width="3"/></g>`:'';
+ const cap=S.head==='cap'?`<g id="cap"><path d="M72 105 Q82 52 151 49 Q211 53 221 108 Q184 92 146 93 Q108 90 72 105Z" fill="#24262c" stroke="#202b36" stroke-width="4"/><path d="M177 99 Q222 96 239 112 Q216 122 175 113Z" fill="#24262c" stroke="#202b36" stroke-width="4"/><path d="M144 51v43" stroke="#3b3d44" stroke-width="3"/><text x="146" y="83" text-anchor="middle" fill="#fff" font-size="25" font-weight="900" transform="rotate(4 146 83)">NH</text></g>`:'';
+ const glasses=S.faceacc==='glasses'?`<g id="glasses" fill="none" stroke="#202936" stroke-width="5"><rect x="91" y="139" width="45" height="33" rx="14"/><rect x="158" y="139" width="45" height="33" rx="14"/><path d="M136 151q11-8 22 0"/></g>`:'';
+ return `<svg viewBox="0 0 300 430" xmlns="http://www.w3.org/2000/svg" aria-label="Boy 1 layered chibi">
+ <ellipse id="shadow" cx="150" cy="397" rx="94" ry="16" fill="#9bc9e8" opacity=".42"/>
+ ${pack}
+ <g id="hair-back"><path d="M77 134 Q69 73 145 65 Q220 70 217 141 L204 180 Q184 195 151 192 Q111 197 83 175Z" fill="#392a25" stroke="#263747" stroke-width="4"/></g>
+ <g id="legs"><path d="M104 320 L98 373 Q111 382 135 373 L145 322Z" fill="${bottom}" stroke="#263747" stroke-width="4"/><path d="M145 322 L157 373 Q179 382 199 372 L190 317Z" fill="${bottom}" stroke="#263747" stroke-width="4"/>
+ <path d="M91 370 Q111 362 137 371 L139 391 Q113 401 84 391 Q81 379 91 370Z" fill="#fff" stroke="#263747" stroke-width="4"/><path d="M155 371 Q180 362 202 371 Q211 381 205 392 Q176 400 151 391Z" fill="#fff" stroke="#263747" stroke-width="4"/><path d="M89 382h48M157 383h47" stroke="#b6c2cc" stroke-width="3"/></g>
+ <g id="torso"><path d="M91 239 Q111 220 148 220 Q184 220 207 240 L196 326 Q149 342 91 326 L82 267Z" fill="${top}" stroke="#263747" stroke-width="4"/>
+ ${hoodie?`<path d="M116 226 Q147 249 178 226" fill="none" stroke="#cbd5dd" stroke-width="4"/><path d="M139 238v33M160 238v33" stroke="#697987" stroke-width="3" stroke-linecap="round"/><path d="M122 226 Q149 211 177 226" fill="none" stroke="#263747" stroke-width="4"/>`:''}
+ <text x="149" y="291" text-anchor="middle" fill="${S.clothes==='white'?'#263747':'#fff'}" font-size="30" font-weight="900">NH</text>
+ <path d="M93 314 Q149 325 197 312" fill="none" stroke="#263747" stroke-width="3" opacity=".25"/></g>
+ <g id="arms"><path d="M91 250 Q69 266 68 306" fill="none" stroke="#263747" stroke-width="30" stroke-linecap="round"/><path d="M91 250 Q69 266 68 306" fill="none" stroke="${sleeve}" stroke-width="24" stroke-linecap="round"/><circle cx="68" cy="314" r="13" fill="${S.skin}" stroke="#263747" stroke-width="3"/>${rArm}</g>
+ <g id="head"><circle cx="78" cy="159" r="18" fill="${S.skin}" stroke="#263747" stroke-width="4"/><circle cx="217" cy="159" r="18" fill="${S.skin}" stroke="#263747" stroke-width="4"/><ellipse cx="148" cy="153" rx="76" ry="75" fill="${S.skin}" stroke="#263747" stroke-width="4"/></g>
+ <g id="hair-front"><path d="M75 134 Q70 78 143 70 Q209 73 219 128 Q205 115 191 111 Q184 132 171 113 Q155 132 145 109 Q128 132 118 110 Q99 130 92 111 Q82 121 75 134Z" fill="#392a25" stroke="#263747" stroke-width="4"/><path d="M91 104 Q118 80 147 82 M157 82 Q183 86 202 106" fill="none" stroke="#594038" stroke-width="5" stroke-linecap="round" opacity=".7"/></g>
+ <g id="face"><ellipse cx="117" cy="153" rx="10" ry="14" fill="#24262a"/><ellipse cx="181" cy="153" rx="10" ry="14" fill="#24262a"/><circle cx="113" cy="148" r="3" fill="#fff"/><circle cx="177" cy="148" r="3" fill="#fff"/><ellipse cx="98" cy="178" rx="13" ry="7" fill="#ec8d86" opacity=".35"/><ellipse cx="198" cy="178" rx="13" ry="7" fill="#ec8d86" opacity=".35"/><path d="M126 179 Q149 203 174 178 Q151 218 126 179Z" fill="#e96f68" stroke="#7d403e" stroke-width="3"/><path d="M137 192 Q150 185 163 193" fill="none" stroke="#fff" stroke-width="3" opacity=".75"/></g>
+ ${glasses}${cap}
+ </svg>`;
+}
+function render(){document.getElementById('stage').innerHTML=avatar()}
+function mk(group,arr,key){const e=document.getElementById(group);e.innerHTML='';arr.forEach(([v,l])=>{const b=document.createElement('button');b.className='choice'+(S[key]===v?' active':'');b.textContent=l;b.onclick=()=>{S[key]=v;drawUI()};e.appendChild(b)})}
+function drawUI(){
+ render();
+ mk('clothes',options.clothes,'clothes');mk('head',options.head,'head');mk('faceacc',options.faceacc,'faceacc');mk('back',options.back,'back');mk('pose',options.pose,'pose');
+ const e=document.getElementById('skin');e.innerHTML='';skins.forEach(c=>{const b=document.createElement('button');b.className='swatch'+(S.skin===c?' active':'');b.style.background=c;b.title='Skin tone';b.onclick=()=>{S.skin=c;drawUI()};e.appendChild(b)})
+}
+drawUI();
+</script>
+</body>
+</html>
