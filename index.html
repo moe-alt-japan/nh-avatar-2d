@@ -1370,7 +1370,44 @@ function renderAvatar(){document.querySelectorAll('.nh-avatar-render').forEach(e
  function samePatch(p){return Object.entries(p).every(([k,v])=>draft[k]===v)}
  function renderTabs(){$('nhAvatarTabs').innerHTML=Object.entries(cats).map(([k,c])=>`<button class="${active===k?'active':''}" data-cat="${k}">${c.label}</button>`).join('');$('nhAvatarTabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{active=b.dataset.cat;renderEditor()});}
  function renderSubcontrols(){if(!$('nhSkinTones'))return;$('nhSkinTones').innerHTML=skins.map(c=>`<button class="nhav-swatch ${draft.skin===c?'selected':''}" style="background:${c}" data-skin="${c}" title="Skin tone"></button>`).join('');$('nhSkinTones').querySelectorAll('button').forEach(b=>b.onclick=()=>{draft.skin=b.dataset.skin;renderAvatar();renderEditor()});$('nhPoses').innerHTML=poses.map(([id,ico])=>`<button class="nhav-pose ${draft.pose===id?'selected':''}" data-pose="${id}" title="${id}">${ico}</button>`).join('');$('nhPoses').querySelectorAll('button').forEach(b=>b.onclick=()=>{draft.pose=b.dataset.pose;renderAvatar()});}
- function renderEditor(){renderTabs();const c=cats[active];$('nhAvatarCategoryTitle').textContent=c.title;$('nhAvatarChoices').innerHTML=c.items.map(([id,name,p])=>`<button class="nhav-choice ${samePatch(p)?'selected':''}" data-id="${id}"><span class="nhav-mini">${avatarSvg({...draft,...p})}</span><b>${name}</b></button>`).join('');$('nhAvatarChoices').querySelectorAll('button').forEach((b,i)=>b.onclick=()=>{Object.assign(draft,c.items[i][2]);renderAvatar();renderEditor()});renderSubcontrols();}
+ function renderEditor(){
+  renderTabs();
+  const c=cats[active];
+
+  $('nhAvatarCategoryTitle').textContent=c.title;
+
+  $('nhAvatarChoices').innerHTML=c.items.map(([id,name,p])=>{
+    let preview='';
+
+    if(active==='character'){
+      const imgMap={
+        boy1:'boy1.png',
+        boy2:'boy2.png',
+        boy3:'boy3.png',
+        girl1:'girl1.png',
+        girl2:'girl2.png',
+        girl3:'girl3.png'
+      };
+
+      if(imgMap[id]){
+        preview=`<img src="${imgMap[id]}" alt="${name}" style="width:85px;height:105px;object-fit:contain;display:block;margin:auto;">`;
+      }
+    }
+
+    return `<button class="nh-av-choice ${samePatch(p)?'selected':''}" data-id="${id}">
+      ${preview}
+      <span>${name}</span>
+    </button>`;
+  }).join('');
+
+  $('nhAvatarChoices').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+    Object.assign(draft,c.items.find(x=>x[0]===b.dataset.id)[2]);
+    renderAvatar();
+    renderEditor();
+  });
+
+  renderSubcontrols();
+}
  function open(){draft={...state};$('nhAvatarModal').classList.remove('hidden');$('nhAvatarModal').setAttribute('aria-hidden','false');renderAvatar();renderEditor()}
  function close(){$('nhAvatarModal').classList.add('hidden');$('nhAvatarModal').setAttribute('aria-hidden','true')}
  function toast(t){const e=$('nhAvatarToast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1500)}
