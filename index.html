@@ -1431,12 +1431,39 @@ return `<button class="nh-av-choice ${samePatch(p)?'selected':''}" data-id="${id
 </button>`; 
   }).join('');
 
-  $('nhAvatarChoices').querySelectorAll('button').forEach(b=>b.onclick=()=>{
-    if(active==='character') draft.character=b.dataset.id;
-    Object.assign(draft,c.items.find(x=>x[0]===b.dataset.id)[2]);
-    renderAvatar();
-    renderEditor();
-  });
+ $('nhAvatarChoices').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+  const id=b.dataset.id;
+
+  if(active==='character'){
+    if(id==='boy2' && !ownedCharacters.includes('boy2')){
+      const price=5000;
+
+      if(coins < price){
+        toast('❌ Not enough coins!');
+        return;
+      }
+
+      if(confirm('Buy Boy 2 for 🪙 5,000 coins?')){
+        coins-=price;
+        ownedCharacters.push('boy2');
+
+        localStorage.setItem(COIN_KEY,String(coins));
+        localStorage.setItem(OWNED_KEY,JSON.stringify(ownedCharacters));
+
+        $('moe2dCoinTop').textContent=coins.toLocaleString();
+        toast('✓ Boy 2 purchased!');
+        renderEditor();
+      }
+      return;
+    }
+
+    draft.character=id;
+  }
+
+  Object.assign(draft,c.items.find(x=>x[0]===id)[2]);
+  renderAvatar();
+  renderEditor();
+});
 
   renderSubcontrols();
 }
