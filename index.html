@@ -1355,11 +1355,11 @@ let coins=Number(localStorage.getItem(COIN_KEY) ?? 999999);
 if(!Number.isFinite(coins)) coins=999999; 
 const OWNED_KEY='nhOwnedCharacters_v1';
 const EQUIPPED_KEY='nhEquippedCharacter_v1';
-let equippedCharacter=localStorage.getItem(EQUIPPED_KEY) || 'base-avatar';
-let ownedCharacters=JSON.parse(localStorage.getItem(OWNED_KEY)||'["base-avatar"]');
+let equippedCharacter=localStorage.getItem(EQUIPPED_KEY) || 'free-character';
+let ownedCharacters=JSON.parse(localStorage.getItem(OWNED_KEY)||'["free-character"]');
 
-if(!ownedCharacters.includes('base-avatar')){
-  ownedCharacters.unshift('base-avatar');
+if(!ownedCharacters.includes('free-character')){
+  ownedCharacters.unshift('free-character');
 }
  const defaults={skin:'#f3c59f',hair:'#332722',hairStyle:'short',top:'#f7f9fc',bottom:'#202938',accessory:'cap',pose:'wave',face:'happy'};
  let saved={}; try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
@@ -1400,26 +1400,18 @@ if(!ownedCharacters.includes('base-avatar')){
   if(s.accessory==='cat')acc=`<path d="M78 61 L86 31 L105 57M136 57 L157 31 L163 64" fill="${s.hair}" stroke="#26384b" stroke-width="4" stroke-linejoin="round"/>`;
   return `<svg viewBox="0 0 240 340" role="img" aria-label="NH chibi avatar">${pony}${hairBack}<ellipse cx="120" cy="318" rx="76" ry="13" fill="#b9dcf4" opacity=".7"/><path d="M80 198 Q120 180 160 198 L169 265 Q120 280 71 265Z" fill="${s.top}" stroke="#26384b" stroke-width="3"/>${leftArm}${rightArm}<path d="M88 263 L84 306 L113 306 L120 267Z" fill="${s.bottom}"/><path d="M120 267 L128 306 L157 306 L152 263Z" fill="${s.bottom}"/><rect x="77" y="300" width="42" height="18" rx="9" fill="#fff" stroke="#26384b" stroke-width="3"/><rect x="123" y="300" width="42" height="18" rx="9" fill="#fff" stroke="#26384b" stroke-width="3"/><circle cx="120" cy="110" r="62" fill="${s.skin}" stroke="#26384b" stroke-width="3"/>${hairFront}<ellipse cx="97" cy="106" rx="7" ry="10" fill="#272626"/><ellipse cx="144" cy="106" rx="7" ry="10" fill="#272626"/>${mouth}<circle cx="87" cy="124" r="9" fill="#ef8d89" opacity=".35"/><circle cx="154" cy="124" r="9" fill="#ef8d89" opacity=".35"/><text x="120" y="237" text-anchor="middle" font-size="25" font-weight="900" fill="#26384b">NH</text>${acc}</svg>`;
  }
+
 function renderAvatar(){
-  const savedCharacter=equippedCharacter || 'base-avatar';
+  const savedCharacter=equippedCharacter || 'free-character';
   const previewCharacter=draft.character || savedCharacter;
 
   document.querySelectorAll('.nh-avatar-render').forEach(el=>{
     if(el.id==='nhHomeAvatar'){
-      if(savedCharacter==='base-avatar'){
-        el.innerHTML=avatarSvg(state);
-      }else{
-        el.innerHTML=`<img src="${savedCharacter}.png" alt="${savedCharacter}" style="width:100%;height:100%;object-fit:contain;">`;
-      }
-    }else{
-      el.innerHTML=avatarSvg(state);
+      el.innerHTML=`<img src="${savedCharacter}.png" alt="${savedCharacter}" style="width:100%;height:100%;object-fit:contain;">`;
     }
   });
 
-  if(previewCharacter==='base-avatar'){
-    $('nhAvatarPreview').innerHTML=avatarSvg(draft);
-  }else{
-    $('nhAvatarPreview').innerHTML=`<img src="${previewCharacter}.png" alt="${previewCharacter}" style="width:100%;height:100%;object-fit:contain;">`;
+  $('nhAvatarPreview').innerHTML=`<img src="${previewCharacter}.png" alt="${previewCharacter}" style="width:100%;height:100%;object-fit:contain;">`;
   }
 
   renderSubcontrols();
@@ -1525,7 +1517,7 @@ function openInventory(){
 
   box.innerHTML=ownedCharacters.map(id=>{
 const names={
-  'base-avatar':'Free Character',
+  'free-character':'Free Character',
   boy1:'Boy 1',
   boy2:'Boy 2',
   boy3:'Boy 3',
@@ -1538,9 +1530,7 @@ const names={
 
     return `
       <div class="nh-av-choice">
-      ${id==='base-avatar'
-  ? `<div class="nh-avatar-render" data-free-preview="true" style="width:85px;height:105px;margin:auto;"></div>`
-  : `<img src="${id}.png" alt="${names[id]}" style="width:85px;height:105px;object-fit:contain;display:block;margin:auto;">`
+     <img src="${id}.png" alt="${names[id]}" style="width:85px;height:105px;object-fit:contain;display:block;margin:auto;">
 }
         <span>${names[id]}</span>
         <button data-equip="${id}" ${isEquipped?'disabled':''}>
@@ -1549,10 +1539,7 @@ const names={
       </div>
     `;
   }).join('');
-const freePreview=box.querySelector('[data-free-preview]');
-if(freePreview){
-  freePreview.innerHTML=avatarSvg(defaults);
-}
+
   box.querySelectorAll('[data-equip]').forEach(btn=>{
     btn.onclick=()=>{
       equippedCharacter=btn.dataset.equip;
