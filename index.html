@@ -1321,7 +1321,31 @@ renderAdventure();
     </div>
   </div>
 </div>
-<div id="nhAvatarToast" class="moe2d-toast"></div>
+<!-- NH INVENTORY MODAL -->
+<div id="nhInventoryModal" class="nhav-modal hidden" aria-hidden="true">
+  <div class="nhav-shell" role="dialog" aria-modal="true">
+
+    <div class="nhav-head">
+      <div>
+        <h2>🎒 Inventory</h2>
+        <p>Your purchased items / 購入したアイテム</p>
+      </div>
+      <button id="nhInventoryClose">×</button>
+    </div>
+
+    <div class="nhav-body">
+      <section class="nhav-editor" style="width:100%;">
+        <h3>👤 My Characters</h3>
+
+        <div id="nhInventoryCharacters" class="nhav-choices">
+          <!-- Owned characters will appear here automatically -->
+        </div>
+      </section>
+    </div>
+
+  </div>
+</div>
+  <div id="nhAvatarToast" class="moe2d-toast"></div>
 
 <script id="nhLightAvatarScript">
 (()=>{
@@ -1483,7 +1507,53 @@ if(ownedCharacters.includes(id)){
  $('nhAvatarSave').onclick=()=>{state={...draft};localStorage.setItem(KEY,JSON.stringify(state));renderAvatar();close();toast('✓ Avatar saved!')};
  $('nhAvatarReset').onclick=()=>{draft={...defaults};renderAvatar();renderEditor()};
  $('moe2dShopBtn').onclick=()=>{open();active='accessory';renderEditor();toast('Shop connection comes next!')};
- $('moe2dInventoryBtn').onclick=()=>{open();toast('Edit your saved look.')};
+function openInventory(){
+  const modal=$('nhInventoryModal');
+  const box=$('nhInventoryCharacters');
+
+  box.innerHTML=ownedCharacters.map(id=>{
+    const names={
+      boy1:'Boy 1',
+      boy2:'Boy 2',
+      boy3:'Boy 3',
+      girl1:'Girl 1',
+      girl2:'Girl 2',
+      girl3:'Girl 3'
+    };
+
+    const isEquipped=equippedCharacter===id;
+
+    return `
+      <div class="nh-av-choice">
+        <img src="${id}.png" alt="${names[id]}" style="width:85px;height:105px;object-fit:contain;display:block;margin:auto;">
+        <span>${names[id]}</span>
+        <button data-equip="${id}" ${isEquipped?'disabled':''}>
+          ${isEquipped?'✓ Equipped':'Use Character'}
+        </button>
+      </div>
+    `;
+  }).join('');
+
+  box.querySelectorAll('[data-equip]').forEach(btn=>{
+    btn.onclick=()=>{
+      equippedCharacter=btn.dataset.equip;
+      localStorage.setItem(EQUIPPED_KEY,equippedCharacter);
+      renderAvatar();
+      openInventory();
+      toast('✓ Character equipped!');
+    };
+  });
+
+  modal.classList.remove('hidden');
+  modal.setAttribute('aria-hidden','false');
+}
+
+$('moe2dInventoryBtn').onclick=openInventory;
+
+$('nhInventoryClose').onclick=()=>{
+  $('nhInventoryModal').classList.add('hidden');
+  $('nhInventoryModal').setAttribute('aria-hidden','true');
+};
  $('moe2dCoinTop').textContent=coins.toLocaleString();
  renderAvatar();
 })();
