@@ -1417,7 +1417,7 @@ function renderAvatar(){
    let shopInfo='';
 
 if(active==='character'){
-  if(id==='boy1'){
+  if(ownedCharacters.includes(id)){
     shopInfo='<small style="display:block;color:#16a34a;font-weight:bold;">✓ Owned</small>';
   }else if(id==='boy2'){
     shopInfo='<small style="display:block;color:#d97706;font-weight:bold;">🪙 5,000</small>';
