@@ -1414,10 +1414,21 @@ function renderAvatar(){
       }
     }
 
-    return `<button class="nh-av-choice ${samePatch(p)?'selected':''}" data-id="${id}">
-      ${preview}
-      <span>${name}</span>
-    </button>`;
+   let shopInfo='';
+
+if(active==='character'){
+  if(id==='boy1'){
+    shopInfo='<small style="display:block;color:#16a34a;font-weight:bold;">✓ Owned</small>';
+  }else if(id==='boy2'){
+    shopInfo='<small style="display:block;color:#d97706;font-weight:bold;">🪙 5,000</small>';
+  }
+}
+
+return `<button class="nh-av-choice ${samePatch(p)?'selected':''}" data-id="${id}">
+  ${preview}
+  <span>${name}</span>
+  ${shopInfo}
+</button>`; 
   }).join('');
 
   $('nhAvatarChoices').querySelectorAll('button').forEach(b=>b.onclick=()=>{
