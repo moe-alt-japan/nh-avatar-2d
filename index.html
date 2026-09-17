@@ -1330,6 +1330,8 @@ const COIN_KEY='nhCoins_v1';
 let coins=Number(localStorage.getItem(COIN_KEY) ?? 999999);
 if(!Number.isFinite(coins)) coins=999999; 
 const OWNED_KEY='nhOwnedCharacters_v1';
+const EQUIPPED_KEY='nhEquippedCharacter_v1';
+let equippedCharacter=localStorage.getItem(EQUIPPED_KEY) || 'boy1';
 let ownedCharacters=JSON.parse(localStorage.getItem(OWNED_KEY)||'["boy1"]');
 if(!ownedCharacters.includes('boy1')) ownedCharacters.push('boy1');
  const defaults={skin:'#f3c59f',hair:'#332722',hairStyle:'short',top:'#f7f9fc',bottom:'#202938',accessory:'cap',pose:'wave',face:'happy'};
@@ -1417,7 +1419,9 @@ function renderAvatar(){
    let shopInfo='';
 
 if(active==='character'){
-  if(ownedCharacters.includes(id)){
+  if(equippedCharacter===id){
+    shopInfo='<small style="display:block;color:#2563eb;font-weight:bold;">✓ Equipped</small>';
+  }else if(ownedCharacters.includes(id)){
     shopInfo='<small style="display:block;color:#16a34a;font-weight:bold;">✓ Owned</small>';
   }else if(id==='boy2'){
     shopInfo='<small style="display:block;color:#d97706;font-weight:bold;">🪙 5,000</small>';
