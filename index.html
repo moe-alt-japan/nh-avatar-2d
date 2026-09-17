@@ -1325,7 +1325,10 @@ renderAdventure();
 
 <script id="nhLightAvatarScript">
 (()=>{
- const $=id=>document.getElementById(id), KEY='nhLightAvatar_v2';
+const $=id=>document.getElementById(id), KEY='nhLightAvatar_v2';
+const COIN_KEY='nhCoins_v1';
+let coins=Number(localStorage.getItem(COIN_KEY));
+if(!Number.isFinite(coins)) coins=999999; 
  const defaults={skin:'#f3c59f',hair:'#332722',hairStyle:'short',top:'#f7f9fc',bottom:'#202938',accessory:'cap',pose:'wave',face:'happy'};
  let saved={}; try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
  let state={...defaults,...saved}, draft={...state}, active='character';
@@ -1431,6 +1434,7 @@ function renderAvatar(){
  $('nhAvatarReset').onclick=()=>{draft={...defaults};renderAvatar();renderEditor()};
  $('moe2dShopBtn').onclick=()=>{open();active='accessory';renderEditor();toast('Shop connection comes next!')};
  $('moe2dInventoryBtn').onclick=()=>{open();toast('Edit your saved look.')};
+ $('moe2dCoinTop').textContent=coins.toLocaleString();
  renderAvatar();
 })();
 </script>
