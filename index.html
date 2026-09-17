@@ -1494,8 +1494,19 @@ if(active==='character'){
     shopInfo='<small style="display:block;color:#2563eb;font-weight:bold;">✓ Equipped</small>';
   }else if(ownedCharacters.includes(id)){
     shopInfo='<small style="display:block;color:#16a34a;font-weight:bold;">✓ Owned</small>';
-  }else if(id==='boy2'){
-    shopInfo='<small style="display:block;color:#d97706;font-weight:bold;">🪙 600</small>';
+  }else{
+    const characterPrices={
+      boy1:400,
+      girl1:400,
+      boy2:600,
+      girl2:600,
+      boy3:850,
+      girl3:850
+    };
+
+    if(characterPrices[id]){
+      shopInfo='<small style="display:block;color:#d97706;font-weight:bold;">🪙 '+characterPrices[id].toLocaleString()+'</small>';
+    }
   }
 }
 
@@ -1509,18 +1520,28 @@ return `<button class="nh-av-choice ${samePatch(p)?'selected':''}" data-id="${id
  $('nhAvatarChoices').querySelectorAll('button').forEach(b=>b.onclick=()=>{
   const id=b.dataset.id;
 
-  if(active==='character'){
-    if(id==='boy2' && !ownedCharacters.includes('boy2')){
-      const price=600;
+ if(active==='character'){
+  const characterPrices={
+    boy1:400,
+    girl1:400,
+    boy2:600,
+    girl2:600,
+    boy3:850,
+    girl3:850
+  };
 
-      if(coins < price){
-        toast('❌ Not enough coins!');
-        return;
-      }
+  if(characterPrices[id] && !ownedCharacters.includes(id)){
+    const price=characterPrices[id];
+    const characterName=c.items.find(x=>x[0]===id)?.[1] || id;
 
-    openPurchaseConfirm('boy2', 'Boy 2', 600);
+    if(coins < price){
+      toast('❌ Not enough coins!');
       return;
     }
+
+    openPurchaseConfirm(id, characterName, price);
+    return;
+  }
 
    draft.character=id;
 
