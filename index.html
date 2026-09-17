@@ -1495,7 +1495,7 @@ if(active==='character'){
   }else if(ownedCharacters.includes(id)){
     shopInfo='<small style="display:block;color:#16a34a;font-weight:bold;">✓ Owned</small>';
   }else if(id==='boy2'){
-    shopInfo='<small style="display:block;color:#d97706;font-weight:bold;">🪙 5,000</small>';
+    shopInfo='<small style="display:block;color:#d97706;font-weight:bold;">🪙 600</small>';
   }
 }
 
@@ -1511,14 +1511,14 @@ return `<button class="nh-av-choice ${samePatch(p)?'selected':''}" data-id="${id
 
   if(active==='character'){
     if(id==='boy2' && !ownedCharacters.includes('boy2')){
-      const price=5000;
+      const price=600;
 
       if(coins < price){
         toast('❌ Not enough coins!');
         return;
       }
 
-    openPurchaseConfirm('boy2', 'Boy 2', 5000);
+    openPurchaseConfirm('boy2', 'Boy 2', 600);
       return;
     }
 
