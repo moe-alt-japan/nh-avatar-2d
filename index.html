@@ -1437,65 +1437,7 @@ function renderAvatar(){
 
 
 
-<script id="nhRealArtSampleScript">
-(()=>{
- const $=id=>document.getElementById(id);
- const ASSET='nh-charat-sample-assets/';
- const names=[['boy1','Boy 1'],['boy2','Boy 2'],['boy3','Boy 3'],['girl1','Girl 1'],['girl2','Girl 2'],['girl3','Girl 3']];
- let selected='boy1', active='character', selectedHair=1;
 
- function preview(name=selected){
-   const p=$('nhAvatarPreview');
-   if(!p)return;
-   // Boy 1 has a large approved preview; the other five use their generated sample card.
-   const file=name==='boy1'?'boy1-preview.png':name+'.png';
-   p.innerHTML=`<img class="nh-real-preview" src="${ASSET}${file}" alt="${name} CHARAT-style NH avatar sample">`;
- }
- function tabs(){
-   const t=$('nhAvatarTabs'); if(!t)return;
-   const items=[['character','👤 Character'],['hair','💇 Hair'],['clothes','👕 Clothes'],['accessory','🎩 Accessories'],['face','😊 Face']];
-   t.innerHTML=items.map(([k,l])=>`<button class="${active===k?'active':''}" data-k="${k}">${l}</button>`).join('');
-   t.querySelectorAll('button').forEach(b=>b.onclick=()=>{active=b.dataset.k; draw();});
- }
- function drawCharacter(){
-   $('nhAvatarCategoryTitle').textContent='Choose a Character';
-   $('nhAvatarChoices').className='nhav-choices';
-   $('nhAvatarChoices').innerHTML=names.map(([id,label])=>`
-    <button class="nhav-choice ${selected===id?'selected':''}" data-id="${id}">
-      <img class="nh-real-choice-img" src="${ASSET}${id}.png" alt="${label}">
-      <b>${label}</b>
-    </button>`).join('');
-   $('nhAvatarChoices').querySelectorAll('button').forEach(b=>b.onclick=()=>{selected=b.dataset.id;preview();drawCharacter();});
- }
- function drawHair(){
-   $('nhAvatarCategoryTitle').textContent='Choose Hair';
-   const c=$('nhAvatarChoices'); c.className='nh-real-hair-grid';
-   c.innerHTML=Array.from({length:10},(_,i)=>`<button class="nh-real-hair-card ${selectedHair===i+1?'selected':''}" data-i="${i+1}"><img src="${ASSET}hair-${String(i+1).padStart(2,'0')}.png" alt="Hair ${i+1}"><b>Hair ${i+1}</b></button>`).join('');
-   c.querySelectorAll('button').forEach(b=>b.onclick=()=>{selectedHair=Number(b.dataset.i);drawHair();});
- }
- function drawComing(label){
-   $('nhAvatarCategoryTitle').textContent=label;
-   const c=$('nhAvatarChoices'); c.className='nhav-choices';
-   c.innerHTML=`<div class="nh-real-banner" style="grid-column:1/-1">Artwork layer comes next.<small>For this sample I am using the actual illustrated artwork from our approved mockup — not the old SVG circle character. We will only make these controls functional after the real modular art layers are prepared.</small></div>`;
- }
- function draw(){
-   tabs(); preview();
-   if(active==='character')drawCharacter();
-   else if(active==='hair')drawHair();
-   else if(active==='clothes')drawComing('Clothes');
-   else if(active==='accessory')drawComing('Accessories');
-   else drawComing('Face');
- }
- // Rewire Avatar button after the old prototype script.
- const avatarBtn=$('moe2dAvatarBtn'), close=$('nhAvatarClose'), modal=$('nhAvatarModal');
- if(avatarBtn) avatarBtn.onclick=()=>{modal.classList.remove('hidden');modal.setAttribute('aria-hidden','false');draw();};
- if(close) close.onclick=()=>{modal.classList.add('hidden');modal.setAttribute('aria-hidden','true');};
- const save=$('nhAvatarSave');
- if(save) save.onclick=()=>{localStorage.setItem('nhRealArtSampleCharacter',selected);modal.classList.add('hidden');};
- const reset=$('nhAvatarReset');
- if(reset) reset.onclick=()=>{selected='boy1';selectedHair=1;active='character';draw();};
-})();
-</script>
 
 </body>
 </html>
