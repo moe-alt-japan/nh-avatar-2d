@@ -1374,7 +1374,7 @@ if(!ownedCharacters.includes('boy1')) ownedCharacters.push('boy1');
   return `<svg viewBox="0 0 240 340" role="img" aria-label="NH chibi avatar">${pony}${hairBack}<ellipse cx="120" cy="318" rx="76" ry="13" fill="#b9dcf4" opacity=".7"/><path d="M80 198 Q120 180 160 198 L169 265 Q120 280 71 265Z" fill="${s.top}" stroke="#26384b" stroke-width="3"/>${leftArm}${rightArm}<path d="M88 263 L84 306 L113 306 L120 267Z" fill="${s.bottom}"/><path d="M120 267 L128 306 L157 306 L152 263Z" fill="${s.bottom}"/><rect x="77" y="300" width="42" height="18" rx="9" fill="#fff" stroke="#26384b" stroke-width="3"/><rect x="123" y="300" width="42" height="18" rx="9" fill="#fff" stroke="#26384b" stroke-width="3"/><circle cx="120" cy="110" r="62" fill="${s.skin}" stroke="#26384b" stroke-width="3"/>${hairFront}<ellipse cx="97" cy="106" rx="7" ry="10" fill="#272626"/><ellipse cx="144" cy="106" rx="7" ry="10" fill="#272626"/>${mouth}<circle cx="87" cy="124" r="9" fill="#ef8d89" opacity=".35"/><circle cx="154" cy="124" r="9" fill="#ef8d89" opacity=".35"/><text x="120" y="237" text-anchor="middle" font-size="25" font-weight="900" fill="#26384b">NH</text>${acc}</svg>`;
  }
 function renderAvatar(){
-  const savedCharacter='base-avatar';
+  const savedCharacter=equippedCharacter || 'base-avatar';
   const previewCharacter=draft.character||savedCharacter;
 
   document.querySelectorAll('.nh-avatar-render').forEach(el=>{
