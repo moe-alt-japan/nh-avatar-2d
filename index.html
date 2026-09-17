@@ -1461,7 +1461,12 @@ return `<button class="nh-av-choice ${samePatch(p)?'selected':''}" data-id="${id
       return;
     }
 
-    draft.character=id;
+   draft.character=id;
+
+if(ownedCharacters.includes(id)){
+  equippedCharacter=id;
+  localStorage.setItem(EQUIPPED_KEY,equippedCharacter);
+}
   }
 
   Object.assign(draft,c.items.find(x=>x[0]===id)[2]);
