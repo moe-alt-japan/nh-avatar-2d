@@ -1329,6 +1329,9 @@ const $=id=>document.getElementById(id), KEY='nhLightAvatar_v2';
 const COIN_KEY='nhCoins_v1';
 let coins=Number(localStorage.getItem(COIN_KEY) ?? 999999);
 if(!Number.isFinite(coins)) coins=999999; 
+const OWNED_KEY='nhOwnedCharacters_v1';
+let ownedCharacters=JSON.parse(localStorage.getItem(OWNED_KEY)||'["boy1"]');
+if(!ownedCharacters.includes('boy1')) ownedCharacters.push('boy1');
  const defaults={skin:'#f3c59f',hair:'#332722',hairStyle:'short',top:'#f7f9fc',bottom:'#202938',accessory:'cap',pose:'wave',face:'happy'};
  let saved={}; try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
  let state={...defaults,...saved}, draft={...state}, active='character';
