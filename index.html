@@ -1355,9 +1355,12 @@ let coins=Number(localStorage.getItem(COIN_KEY) ?? 999999);
 if(!Number.isFinite(coins)) coins=999999; 
 const OWNED_KEY='nhOwnedCharacters_v1';
 const EQUIPPED_KEY='nhEquippedCharacter_v1';
-let equippedCharacter=localStorage.getItem(EQUIPPED_KEY) || 'boy1';
-let ownedCharacters=JSON.parse(localStorage.getItem(OWNED_KEY)||'["boy1"]');
-if(!ownedCharacters.includes('boy1')) ownedCharacters.push('boy1');
+let equippedCharacter=localStorage.getItem(EQUIPPED_KEY) || 'base-avatar';
+let ownedCharacters=JSON.parse(localStorage.getItem(OWNED_KEY)||'["base-avatar"]');
+
+if(!ownedCharacters.includes('base-avatar')){
+  ownedCharacters.unshift('base-avatar');
+}
  const defaults={skin:'#f3c59f',hair:'#332722',hairStyle:'short',top:'#f7f9fc',bottom:'#202938',accessory:'cap',pose:'wave',face:'happy'};
  let saved={}; try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
  let state={...defaults,...saved}, draft={...state}, active='character';
@@ -1512,20 +1515,24 @@ function openInventory(){
   const box=$('nhInventoryCharacters');
 
   box.innerHTML=ownedCharacters.map(id=>{
-    const names={
-      boy1:'Boy 1',
-      boy2:'Boy 2',
-      boy3:'Boy 3',
-      girl1:'Girl 1',
-      girl2:'Girl 2',
-      girl3:'Girl 3'
-    };
+const names={
+  'base-avatar':'Free Character',
+  boy1:'Boy 1',
+  boy2:'Boy 2',
+  boy3:'Boy 3',
+  girl1:'Girl 1',
+  girl2:'Girl 2',
+  girl3:'Girl 3'
+};
 
     const isEquipped=equippedCharacter===id;
 
     return `
       <div class="nh-av-choice">
-        <img src="${id}.png" alt="${names[id]}" style="width:85px;height:105px;object-fit:contain;display:block;margin:auto;">
+      ${id==='base-avatar'
+  ? `<div class="nh-avatar-render" data-free-preview="true" style="width:85px;height:105px;margin:auto;"></div>`
+  : `<img src="${id}.png" alt="${names[id]}" style="width:85px;height:105px;object-fit:contain;display:block;margin:auto;">`
+}
         <span>${names[id]}</span>
         <button data-equip="${id}" ${isEquipped?'disabled':''}>
           ${isEquipped?'✓ Equipped':'Use Character'}
@@ -1533,7 +1540,10 @@ function openInventory(){
       </div>
     `;
   }).join('');
-
+const freePreview=box.querySelector('[data-free-preview]');
+if(freePreview){
+  freePreview.innerHTML=avatarSvg(defaults);
+}
   box.querySelectorAll('[data-equip]').forEach(btn=>{
     btn.onclick=()=>{
       equippedCharacter=btn.dataset.equip;
