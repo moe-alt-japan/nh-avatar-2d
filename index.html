@@ -1345,6 +1345,49 @@ renderAdventure();
 
   </div>
 </div>
+
+  <!-- PURCHASE CONFIRMATION MODAL -->
+<div id="nhPurchaseModal" class="nhav-modal hidden" aria-hidden="true">
+  <div class="nhav-shell" role="dialog" aria-modal="true" style="max-width:430px;">
+    
+    <div class="nhav-head">
+      <div>
+        <h2>🛍️ Confirm Purchase</h2>
+        <p>購入を確認してください</p>
+      </div>
+      <button id="nhPurchaseClose">×</button>
+    </div>
+
+    <div class="nhav-body" style="display:block;text-align:center;padding:28px;">
+      
+      <img id="nhPurchaseImage"
+           src=""
+           alt=""
+           style="width:150px;height:190px;object-fit:contain;margin:auto;display:block;">
+
+      <h2 id="nhPurchaseName" style="margin:10px 0 5px;"></h2>
+
+      <div id="nhPurchasePrice"
+           style="font-size:22px;font-weight:bold;margin:10px 0;">
+        🪙 0
+      </div>
+
+      <p>Are you sure you want to buy this character?</p>
+      <p style="font-size:13px;">このキャラクターを購入しますか？</p>
+
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;">
+        <button id="nhPurchaseCancel" style="padding:12px 24px;">
+          Cancel
+        </button>
+
+        <button id="nhPurchaseBuy" class="nhav-save" style="padding:12px 24px;">
+          🪙 Buy
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
   <div id="nhAvatarToast" class="moe2d-toast"></div>
 
 <script id="nhLightAvatarScript">
@@ -1475,17 +1518,7 @@ return `<button class="nh-av-choice ${samePatch(p)?'selected':''}" data-id="${id
         return;
       }
 
-      if(confirm('Buy Boy 2 for 🪙 5,000 coins?')){
-        coins-=price;
-        ownedCharacters.push('boy2');
-
-        localStorage.setItem(COIN_KEY,String(coins));
-        localStorage.setItem(OWNED_KEY,JSON.stringify(ownedCharacters));
-
-        $('moe2dCoinTop').textContent=coins.toLocaleString();
-        toast('✓ Boy 2 purchased!');
-        renderEditor();
-      }
+    openPurchaseConfirm('boy2', 'Boy 2', 5000);
       return;
     }
 
@@ -1507,6 +1540,47 @@ if(ownedCharacters.includes(id)){
  function open(){draft={...state};$('nhAvatarModal').classList.remove('hidden');$('nhAvatarModal').setAttribute('aria-hidden','false');renderAvatar();renderEditor()}
  function close(){$('nhAvatarModal').classList.add('hidden');$('nhAvatarModal').setAttribute('aria-hidden','true')}
  function toast(t){const e=$('nhAvatarToast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1500)}
+function openPurchaseConfirm(id, name, price){
+  const modal=$('nhPurchaseModal');
+
+  $('nhPurchaseImage').src=id+'.png';
+  $('nhPurchaseImage').alt=name;
+  $('nhPurchaseName').textContent=name;
+  $('nhPurchasePrice').textContent='🪙 '+price.toLocaleString();
+
+  modal.classList.remove('hidden');
+  modal.setAttribute('aria-hidden','false');
+
+  $('nhPurchaseCancel').onclick=()=>{
+    modal.classList.add('hidden');
+    modal.setAttribute('aria-hidden','true');
+  };
+
+  $('nhPurchaseBuy').onclick=()=>{
+    if(coins < price){
+      toast('❌ Not enough coins!');
+      return;
+    }
+
+    coins-=price;
+
+    if(!ownedCharacters.includes(id)){
+      ownedCharacters.push(id);
+    }
+
+    localStorage.setItem(COIN_KEY,String(coins));
+    localStorage.setItem(OWNED_KEY,JSON.stringify(ownedCharacters));
+
+    $('moe2dCoinTop').textContent=coins.toLocaleString();
+
+    modal.classList.add('hidden');
+    modal.setAttribute('aria-hidden','true');
+
+    toast('✓ '+name+' purchased!');
+    renderEditor();
+  };
+}
+  
  $('moe2dAvatarBtn').onclick=open;$('nhAvatarClose').onclick=close;$('nhAvatarModal').onclick=e=>{if(e.target===$('nhAvatarModal'))close()};
  $('nhAvatarSave').onclick=()=>{state={...draft};localStorage.setItem(KEY,JSON.stringify(state));renderAvatar();close();toast('✓ Avatar saved!')};
  $('nhAvatarReset').onclick=()=>{draft={...defaults};renderAvatar();renderEditor()};
