@@ -1417,7 +1417,8 @@ if(!ownedCharacters.includes('free-character')){
   hair:{label:'💇 Hair',title:'Choose Hair',items:[['short','Short',{hairStyle:'short'}],['spiky','Spiky',{hairStyle:'spiky'}],['long','Long',{hairStyle:'long'}],['pony','Ponytail',{hairStyle:'pony'}],['black','Black',{hair:'#2d2929'}],['brown','Brown',{hair:'#75412f'}],['blonde','Blonde',{hair:'#d9a632'}],['purple','Purple',{hair:'#4a3c67'}]]},
   clothes:{label:'👕 Clothes',title:'Choose Clothes',items:[['white','NH Hoodie',{top:'#f7f9fc',bottom:'#202938'}],['blue','Blue Hoodie',{top:'#3c83e8',bottom:'#202938'}],['green','Green Tee',{top:'#45a85a',bottom:'#28333d'}],['pink','Pink Hoodie',{top:'#f18db1',bottom:'#33303b'}],['yellow','Yellow Hoodie',{top:'#f2bf3d',bottom:'#202938'}],['red','Red Tee',{top:'#e75b58',bottom:'#242b35'}]]},
   accessory:{label:'🎩 Accessories',title:'Choose an Accessory',items:[['none','None',{accessory:'none'}],['cap','NH Cap',{accessory:'cap'}],['glasses','Glasses',{accessory:'glasses'}],['headphones','Headphones',{accessory:'headphones'}],['crown','Crown',{accessory:'crown'}],['flower','Flowers',{accessory:'flower'}],['eyepatch','Eye Patch',{accessory:'eyepatch'}],['cat','Cat Ears',{accessory:'cat'}]]},
-  face:{label:'😊 Face',title:'Choose a Face',items:[['happy','Happy',{face:'happy'}],['smile','Smile',{face:'smile'}],['cool','Cool',{face:'cool'}],['surprise','Surprised',{face:'surprise'}]]}
+  eyes:{label:'👀 Eyes',title:'Choose Eyes',items:[['eyes1','Classic',{}],['eyes2','Chibi',{}],['eyes3','Sharp Cool',{}],['eyes4','Gentle',{}],['eyes5','Strong Confident',{}],['eyes6','Sleepy',{}],['eyes7','Sparkling',{}],['eyes8','Mischievous',{}]]},
+   face:{label:'😊 Face',title:'Choose a Face',items:[['happy','Happy',{face:'happy'}],['smile','Smile',{face:'smile'}],['cool','Cool',{face:'cool'}],['surprise','Surprised',{face:'surprise'}]]}
  };
  function avatarSvg(s){
   const long=s.hairStyle==='long'||s.hairStyle==='pony';
@@ -1448,6 +1449,7 @@ if(!ownedCharacters.includes('free-character')){
 function renderAvatar(){
   const savedCharacter=equippedCharacter || 'free-character';
   const previewCharacter=draft.character || savedCharacter;
+  const previewEyes=draft.eyes || 'eyes1';
 
   document.querySelectorAll('.nh-avatar-render').forEach(el=>{
     if(el.id==='nhHomeAvatar'){
@@ -1462,7 +1464,7 @@ if(previewCharacter === 'custom-test'){
     <div style="position:relative;width:100%;height:100%;">
       <img src="face1.png"
            style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;">
-      <img src="eyes1.png"
+      <img src="${previewEyes}.png"
            style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;">
     </div>
   `;
@@ -1531,6 +1533,12 @@ return `<button class="nh-av-choice ${samePatch(p)?'selected':''}" data-id="${id
 
  $('nhAvatarChoices').querySelectorAll('button').forEach(b=>b.onclick=()=>{
   const id=b.dataset.id;
+   if(active==='eyes'){
+  draft.eyes=id;
+  renderAvatar();
+  renderEditor();
+  return;
+}
 
  if(active==='character'){
   const characterPrices={
