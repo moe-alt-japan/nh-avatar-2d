@@ -1411,7 +1411,8 @@ if(!ownedCharacters.includes('free-character')){
  const poses=[['stand','🧍'],['wave','👋'],['cheer','🙌'],['point','☝️'],['peace','✌️']];
  const cats={
   character:{label:'👤 Character',title:'Choose a Character',items:[
-   ['boy1','Boy 1',{skin:'#f3c59f',hair:'#332722',hairStyle:'short',top:'#f7f9fc'}],['boy2','Boy 2',{skin:'#c98f64',hair:'#8a4f2d',hairStyle:'spiky',top:'#3c83e8'}],['boy3','Boy 3',{skin:'#f0bd8d',hair:'#e1a62b',hairStyle:'spiky',top:'#e75b58'}],['girl1','Girl 1',{skin:'#f3c6a0',hair:'#75412f',hairStyle:'long',top:'#f18db1'}],['girl2','Girl 2',{skin:'#edbd99',hair:'#30283d',hairStyle:'long',top:'#fff6e8'}],['girl3','Girl 3',{skin:'#f4c99e',hair:'#c78c45',hairStyle:'pony',top:'#f2bf3d'}]
+   ['boy1','Boy 1',{skin:'#f3c59f',hair:'#332722',hairStyle:'short',top:'#f7f9fc'}],['boy2','Boy 2',{skin:'#c98f64',hair:'#8a4f2d',hairStyle:'spiky',top:'#3c83e8'}],['boy3','Boy 3',{skin:'#f0bd8d',hair:'#e1a62b',hairStyle:'spiky',top:'#e75b58'}],['girl1','Girl 1',{skin:'#f3c6a0',hair:'#75412f',hairStyle:'long',top:'#f18db1'}],['girl2','Girl 2',{skin:'#edbd99',hair:'#30283d',hairStyle:'long',top:'#fff6e8'}],['girl3','Girl 3',{skin:'#f4c99e',hair:'#c78c45',hairStyle:'pony',top:'#f2bf3d'}],
+['custom-test','🧪 Custom Avatar Test',{}]
   ]},
   hair:{label:'💇 Hair',title:'Choose Hair',items:[['short','Short',{hairStyle:'short'}],['spiky','Spiky',{hairStyle:'spiky'}],['long','Long',{hairStyle:'long'}],['pony','Ponytail',{hairStyle:'pony'}],['black','Black',{hair:'#2d2929'}],['brown','Brown',{hair:'#75412f'}],['blonde','Blonde',{hair:'#d9a632'}],['purple','Purple',{hair:'#4a3c67'}]]},
   clothes:{label:'👕 Clothes',title:'Choose Clothes',items:[['white','NH Hoodie',{top:'#f7f9fc',bottom:'#202938'}],['blue','Blue Hoodie',{top:'#3c83e8',bottom:'#202938'}],['green','Green Tee',{top:'#45a85a',bottom:'#28333d'}],['pink','Pink Hoodie',{top:'#f18db1',bottom:'#33303b'}],['yellow','Yellow Hoodie',{top:'#f2bf3d',bottom:'#202938'}],['red','Red Tee',{top:'#e75b58',bottom:'#242b35'}]]},
@@ -1473,14 +1474,15 @@ function renderAvatar(){
     let preview='';
 
     if(active==='character'){
-      const imgMap={
-        boy1:'boy1.png',
-        boy2:'boy2.png',
-        boy3:'boy3.png',
-        girl1:'girl1.png',
-        girl2:'girl2.png',
-        girl3:'girl3.png'
-      };
+const imgMap={
+  boy1:'boy1.png',
+  boy2:'boy2.png',
+  boy3:'boy3.png',
+  girl1:'girl1.png',
+  girl2:'girl2.png',
+  girl3:'girl3.png',
+ 'custom-test':'face1.png'
+};
 
       if(imgMap[id]){
         preview=`<img src="${imgMap[id]}" alt="${name}" style="width:85px;height:105px;object-fit:contain;display:block;margin:auto;">`;
