@@ -1414,7 +1414,7 @@ if(!ownedCharacters.includes('free-character')){
    ['boy1','Boy 1',{skin:'#f3c59f',hair:'#332722',hairStyle:'short',top:'#f7f9fc'}],['boy2','Boy 2',{skin:'#c98f64',hair:'#8a4f2d',hairStyle:'spiky',top:'#3c83e8'}],['boy3','Boy 3',{skin:'#f0bd8d',hair:'#e1a62b',hairStyle:'spiky',top:'#e75b58'}],['girl1','Girl 1',{skin:'#f3c6a0',hair:'#75412f',hairStyle:'long',top:'#f18db1'}],['girl2','Girl 2',{skin:'#edbd99',hair:'#30283d',hairStyle:'long',top:'#fff6e8'}],['girl3','Girl 3',{skin:'#f4c99e',hair:'#c78c45',hairStyle:'pony',top:'#f2bf3d'}],
 ['custom-test','🧪 Custom Avatar Test',{}]
   ]},
-  hair:{label:'💇 Hair',title:'Choose Hair',items:[['short','Short',{hairStyle:'short'}],['spiky','Spiky',{hairStyle:'spiky'}],['long','Long',{hairStyle:'long'}],['pony','Ponytail',{hairStyle:'pony'}],['black','Black',{hair:'#2d2929'}],['brown','Brown',{hair:'#75412f'}],['blonde','Blonde',{hair:'#d9a632'}],['purple','Purple',{hair:'#4a3c67'}]]},
+hair:{label:'💇 Hair',title:'Choose Hair',items:[['hair1','Hair 1',{}],['hair2','Hair 2',{}],['hair3','Hair 3',{}],['hair4','Hair 4',{}],['hair5','Hair 5',{}],['hair6','Hair 6',{}]]},
   clothes:{label:'👕 Clothes',title:'Choose Clothes',items:[['white','NH Hoodie',{top:'#f7f9fc',bottom:'#202938'}],['blue','Blue Hoodie',{top:'#3c83e8',bottom:'#202938'}],['green','Green Tee',{top:'#45a85a',bottom:'#28333d'}],['pink','Pink Hoodie',{top:'#f18db1',bottom:'#33303b'}],['yellow','Yellow Hoodie',{top:'#f2bf3d',bottom:'#202938'}],['red','Red Tee',{top:'#e75b58',bottom:'#242b35'}]]},
   accessory:{label:'🎩 Accessories',title:'Choose an Accessory',items:[['none','None',{accessory:'none'}],['cap','NH Cap',{accessory:'cap'}],['glasses','Glasses',{accessory:'glasses'}],['headphones','Headphones',{accessory:'headphones'}],['crown','Crown',{accessory:'crown'}],['flower','Flowers',{accessory:'flower'}],['eyepatch','Eye Patch',{accessory:'eyepatch'}],['cat','Cat Ears',{accessory:'cat'}]]},
   eyes:{label:'👀 Eyes',title:'Choose Eyes',items:[['eyes1','Classic',{}],['eyes2','Chibi',{}],['eyes3','Sharp Cool',{}],['eyes4','Gentle',{}],['eyes5','Strong Confident',{}],['eyes6','Sleepy',{}],['eyes7','Sparkling',{}],['eyes8','Mischievous',{}]]},
@@ -1453,6 +1453,7 @@ function renderAvatar(){
   const previewEyes=draft.eyes || 'eyes1';
   const previewFace=draft.faceShape || 'face1';
   const previewMouth=draft.mouth || 'mouth1';
+  const previewHair=draft.hair || 'hair1';
   document.querySelectorAll('.nh-avatar-render').forEach(el=>{
     if(el.id==='nhHomeAvatar'){
       el.innerHTML=`<img src="${savedCharacter}.png" alt="${savedCharacter}" style="width:100%;height:100%;object-fit:contain;">`;
@@ -1470,6 +1471,8 @@ if(previewCharacter === 'custom-test'){
            style="position:absolute;left:10%;top:0;width:80%;height:100%;object-fit:contain;">
       <img src="${previewMouth}.png"
            style="position:absolute;left:35%;top:15%;width:30%;height:100%;object-fit:contain;">
+           <img src="${previewHair}.png"
+     style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;">
     </div>
   `;
 }
@@ -1545,6 +1548,12 @@ if(active==='eyes'){
 }
 if(active==='mouth'){
   draft.mouth=id;
+  renderAvatar();
+  renderEditor();
+  return;
+}
+   if(active==='hair'){
+  draft.hair=id;
   renderAvatar();
   renderEditor();
   return;
