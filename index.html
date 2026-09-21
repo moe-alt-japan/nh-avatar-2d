@@ -1417,6 +1417,10 @@ if(equippedCharacter === 'free-character'){
   equippedCharacter = 'boy free character';
   localStorage.setItem(EQUIPPED_KEY,equippedCharacter);
 }
+
+// Remove the old free-character from previously saved inventories
+ownedCharacters = ownedCharacters.filter(id => id !== 'free-character');
+localStorage.setItem(OWNED_KEY,JSON.stringify(ownedCharacters));
  const defaults={skin:'#f3c59f',hair:'#332722',hairStyle:'short',top:'#f7f9fc',bottom:'#202938',accessory:'cap',pose:'wave',face:'happy'};
  let saved={}; try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
  let state={...defaults,...saved}, draft={...state}, active='character';
