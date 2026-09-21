@@ -1390,6 +1390,45 @@ renderAdventure();
     </div>
   </div>
 </div>
+  <!-- MESSAGE CHANGE MODAL -->
+<div id="nhMessageModal" class="nhav-modal hidden" aria-hidden="true">
+  <div class="nhav-shell" role="dialog" aria-modal="true" style="max-width:430px;">
+
+    <div class="nhav-head">
+      <div>
+        <h2>✏️ Change Message</h2>
+        <p>メッセージを変更</p>
+      </div>
+      <button id="nhMessageClose">×</button>
+    </div>
+
+    <div class="nhav-body" style="display:block;text-align:center;padding:28px;">
+
+      <div style="font-size:44px;margin-bottom:8px;">💬</div>
+
+      <h2 style="margin:5px 0;">Your Message</h2>
+
+      <div id="nhMessagePrice"
+           style="font-size:22px;font-weight:bold;margin:12px 0;">
+        🪙 100
+      </div>
+
+      <p>Do you want to change your message?</p>
+      <p style="font-size:13px;">メッセージを変更しますか？</p>
+
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;">
+        <button id="nhMessageCancel" style="padding:12px 24px;">
+          Cancel
+        </button>
+
+        <button id="nhMessageChange" class="nhav-save" style="padding:12px 24px;">
+          ✏️ Change
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
   <div id="nhAvatarToast" class="moe2d-toast"></div>
 
 <script id="nhLightAvatarScript">
@@ -1816,37 +1855,53 @@ if(avatarSpeech && savedSpeech){
     const hasChanged=localStorage.getItem(SPEECH_CHANGED_KEY)==='true';
     const speechPrice=hasChanged ? 50 : 100;
 
-    const wantsToChange=confirm(
-      `Do you want to change your message?\n\nCost: 🪙 ${speechPrice} coins`
-    );
+$('nhMessagePrice').textContent=`🪙 ${speechPrice}`;
 
-    if(!wantsToChange) return;
- if(coins < speechPrice){
-  alert(`Not enough coins! You need 🪙 ${speechPrice} coins.`);
-  return;
-}
+$('nhMessageModal').classList.remove('hidden');
+$('nhMessageModal').setAttribute('aria-hidden','false');
 
-const currentMessage=localStorage.getItem(SPEECH_KEY) || avatarSpeech.innerText.trim();
+return;
 
-const newMessage=prompt(
-  `Write your new message (maximum 50 characters):`,
-  currentMessage
-);
+  const closeMessageModal=()=>{
+  $('nhMessageModal').classList.add('hidden');
+  $('nhMessageModal').setAttribute('aria-hidden','true');
+};
 
-if(newMessage===null) return;
+$('nhMessageClose').onclick=closeMessageModal;
+$('nhMessageCancel').onclick=closeMessageModal;
+  $('nhMessageChange').onclick=()=>{
+  const hasChanged=localStorage.getItem(SPEECH_CHANGED_KEY)==='true';
+  const speechPrice=hasChanged ? 50 : 100;
 
-const cleanMessage=newMessage.trim();
+  if(coins < speechPrice){
+    alert(`Not enough coins! You need 🪙 ${speechPrice} coins.`);
+    return;
+  }
 
-if(cleanMessage.length===0){
-  alert('Please write a message.');
-  return;
-}
+  const currentMessage=
+    localStorage.getItem(SPEECH_KEY) ||
+    avatarSpeech.innerText.trim();
 
-if(cleanMessage.length>50){
-  alert(`Your message is too long! (${cleanMessage.length}/50 characters)`);
-  return;
-}
-  coins-=speechPrice;
+  const newMessage=prompt(
+    'Write your new message (maximum 50 characters):',
+    currentMessage
+  );
+
+  if(newMessage===null) return;
+
+  const cleanMessage=newMessage.trim();
+
+  if(cleanMessage.length===0){
+    alert('Please write a message.');
+    return;
+  }
+
+  if(cleanMessage.length>50){
+    alert(`Your message is too long! (${cleanMessage.length}/50 characters)`);
+    return;
+  }
+coins-=speechPrice;
+
 localStorage.setItem(COIN_KEY,String(coins));
 localStorage.setItem(SPEECH_KEY,cleanMessage);
 localStorage.setItem(SPEECH_CHANGED_KEY,'true');
@@ -1854,9 +1909,10 @@ localStorage.setItem(SPEECH_CHANGED_KEY,'true');
 avatarSpeech.textContent=cleanMessage;
 $('moe2dCoinTop').textContent=coins.toLocaleString();
 
+closeMessageModal();
+
 alert(`Message changed! 🪙 ${speechPrice} coins were used.`);
   };
-}
 })();
 </script>
 
