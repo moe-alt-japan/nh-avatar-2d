@@ -469,7 +469,7 @@ body.dark .dashboard-hero{background:linear-gradient(135deg,#223d5d,#3a3157);col
       <div class="moe2d-avatar-art-frame">
         <div id="nhHomeAvatar" class="nh-avatar-render" aria-label="Current avatar"></div>
       </div>
-      <div class="moe2d-avatar-speech">Let's learn English<br>and have fun! 😊</div>
+    <div id="avatarSpeech" class="moe2d-avatar-speech" title="Click to change your message">Let's learn English<br>and have fun! 😊</div>
     </div>
     <div class="moe2d-hero-copy">
       <p class="eyebrow">YOUR LEARNING DASHBOARD</p>
@@ -1394,6 +1394,8 @@ renderAdventure();
 (()=>{
 const $=id=>document.getElementById(id), KEY='nhLightAvatar_v2';
 const COIN_KEY='nhCoins_v1';
+  const SPEECH_KEY='nhAvatarSpeech_v1';
+const SPEECH_CHANGED_KEY='nhAvatarSpeechChanged_v1';
 let coins=Number(localStorage.getItem(COIN_KEY) ?? 999999);
 if(!Number.isFinite(coins)) coins=999999; 
 const OWNED_KEY='nhOwnedCharacters_v1';
@@ -1799,6 +1801,60 @@ $('nhInventoryClose').onclick=()=>{
 };
  $('moe2dCoinTop').textContent=coins.toLocaleString();
  renderAvatar();
+  const avatarSpeech=$('avatarSpeech');
+const savedSpeech=localStorage.getItem(SPEECH_KEY);
+
+if(avatarSpeech && savedSpeech){
+  avatarSpeech.textContent=savedSpeech;
+}
+  if(avatarSpeech){
+  avatarSpeech.style.cursor='pointer';
+
+  avatarSpeech.onclick=()=>{
+    const hasChanged=localStorage.getItem(SPEECH_CHANGED_KEY)==='true';
+    const speechPrice=hasChanged ? 50 : 100;
+
+    const wantsToChange=confirm(
+      `Do you want to change your message?\n\nCost: 🪙 ${speechPrice} coins`
+    );
+
+    if(!wantsToChange) return;
+ if(coins < speechPrice){
+  alert(`Not enough coins! You need 🪙 ${speechPrice} coins.`);
+  return;
+}
+
+const currentMessage=localStorage.getItem(SPEECH_KEY) || avatarSpeech.innerText.trim();
+
+const newMessage=prompt(
+  `Write your new message (maximum 50 characters):`,
+  currentMessage
+);
+
+if(newMessage===null) return;
+
+const cleanMessage=newMessage.trim();
+
+if(cleanMessage.length===0){
+  alert('Please write a message.');
+  return;
+}
+
+if(cleanMessage.length>50){
+  alert(`Your message is too long! (${cleanMessage.length}/50 characters)`);
+  return;
+}
+  coins-=speechPrice;
+localStorage.setItem(COIN_KEY,String(coins));
+localStorage.setItem(SPEECH_KEY,cleanMessage);
+localStorage.setItem(SPEECH_CHANGED_KEY,'true');
+
+avatarSpeech.textContent=cleanMessage;
+$('moe2dCoinTop').textContent=coins.toLocaleString();
+
+alert(`Message changed! 🪙 ${speechPrice} coins were used.`);
+  };
+}
 })();
 </script>
 
