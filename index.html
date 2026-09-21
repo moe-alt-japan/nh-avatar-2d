@@ -1398,11 +1398,24 @@ let coins=Number(localStorage.getItem(COIN_KEY) ?? 999999);
 if(!Number.isFinite(coins)) coins=999999; 
 const OWNED_KEY='nhOwnedCharacters_v1';
 const EQUIPPED_KEY='nhEquippedCharacter_v1';
-let equippedCharacter=localStorage.getItem(EQUIPPED_KEY) || 'free-character';
-let ownedCharacters=JSON.parse(localStorage.getItem(OWNED_KEY)||'["free-character"]');
+let equippedCharacter=localStorage.getItem(EQUIPPED_KEY) || 'boy free character';
 
-if(!ownedCharacters.includes('free-character')){
-  ownedCharacters.unshift('free-character');
+let ownedCharacters=JSON.parse(
+  localStorage.getItem(OWNED_KEY) ||
+  '["boy free character","girl free character"]'
+);
+
+if(!ownedCharacters.includes('boy free character')){
+  ownedCharacters.unshift('boy free character');
+}
+
+if(!ownedCharacters.includes('girl free character')){
+  ownedCharacters.push('girl free character');
+}
+
+if(equippedCharacter === 'free-character'){
+  equippedCharacter = 'boy free character';
+  localStorage.setItem(EQUIPPED_KEY,equippedCharacter);
 }
  const defaults={skin:'#f3c59f',hair:'#332722',hairStyle:'short',top:'#f7f9fc',bottom:'#202938',accessory:'cap',pose:'wave',face:'happy'};
  let saved={}; try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
@@ -1410,10 +1423,17 @@ if(!ownedCharacters.includes('free-character')){
  const skins=['#f7d4b3','#f0bd91','#d99768','#a96c49','#684332'];
  const poses=[['stand','🧍'],['wave','👋'],['cheer','🙌'],['point','☝️'],['peace','✌️']];
  const cats={
-  character:{label:'👤 Character',title:'Choose a Character',items:[
-   ['boy1','Boy 1',{skin:'#f3c59f',hair:'#332722',hairStyle:'short',top:'#f7f9fc'}],['boy2','Boy 2',{skin:'#c98f64',hair:'#8a4f2d',hairStyle:'spiky',top:'#3c83e8'}],['boy3','Boy 3',{skin:'#f0bd8d',hair:'#e1a62b',hairStyle:'spiky',top:'#e75b58'}],['girl1','Girl 1',{skin:'#f3c6a0',hair:'#75412f',hairStyle:'long',top:'#f18db1'}],['girl2','Girl 2',{skin:'#edbd99',hair:'#30283d',hairStyle:'long',top:'#fff6e8'}],['girl3','Girl 3',{skin:'#f4c99e',hair:'#c78c45',hairStyle:'pony',top:'#f2bf3d'}],
-['custom-test','🧪 Custom Avatar Test',{}]
-  ]},
+character:{label:'👤 Character',title:'Choose a Character',items:[
+  ['boy free character','Free Boy',{}],
+  ['girl free character','Free Girl',{}],
+  ['boy1','Boy 1',{skin:'#f3c59f',hair:'#332722',hairStyle:'short',top:'#f7f9fc'}],
+  ['boy2','Boy 2',{skin:'#c98f64',hair:'#8a4f2d',hairStyle:'spiky',top:'#3c83e8'}],
+  ['boy3','Boy 3',{skin:'#f0bd8d',hair:'#e1a62b',hairStyle:'spiky',top:'#e75b58'}],
+  ['girl1','Girl 1',{skin:'#f3c6a0',hair:'#75412f',hairStyle:'long',top:'#f18db1'}],
+  ['girl2','Girl 2',{skin:'#edbd99',hair:'#30283d',hairStyle:'long',top:'#fff6e8'}],
+  ['girl3','Girl 3',{skin:'#f4c99e',hair:'#c78c45',hairStyle:'pony',top:'#f2bf3d'}],
+  ['custom-test','🧪 Custom Avatar Test',{}]
+]},
 hair:{label:'💇 Hair',title:'Choose Hair',items:[['hair1','Hair 1',{}],['hair2','Hair 2',{}],['hair3','Hair 3',{}],['hair4','Hair 4',{}],['hair5','Hair 5',{}],['hair6','Hair 6',{}]]},
   clothes:{label:'👕 Clothes',title:'Choose Clothes',items:[['white','NH Hoodie',{top:'#f7f9fc',bottom:'#202938'}],['blue','Blue Hoodie',{top:'#3c83e8',bottom:'#202938'}],['green','Green Tee',{top:'#45a85a',bottom:'#28333d'}],['pink','Pink Hoodie',{top:'#f18db1',bottom:'#33303b'}],['yellow','Yellow Hoodie',{top:'#f2bf3d',bottom:'#202938'}],['red','Red Tee',{top:'#e75b58',bottom:'#242b35'}]]},
   accessory:{label:'🎩 Accessories',title:'Choose an Accessory',items:[['none','None',{accessory:'none'}],['cap','NH Cap',{accessory:'cap'}],['glasses','Glasses',{accessory:'glasses'}],['headphones','Headphones',{accessory:'headphones'}],['crown','Crown',{accessory:'crown'}],['flower','Flowers',{accessory:'flower'}],['eyepatch','Eye Patch',{accessory:'eyepatch'}],['cat','Cat Ears',{accessory:'cat'}]]},
@@ -1494,13 +1514,15 @@ if(previewCharacter === 'custom-test'){
 
     if(active==='character'){
 const imgMap={
+  'boy free character':'boy free character.png',
+  'girl free character':'girl free character.png',
   boy1:'boy1.png',
   boy2:'boy2.png',
   boy3:'boy3.png',
   girl1:'girl1.png',
   girl2:'girl2.png',
   girl3:'girl3.png',
- 'custom-test':'face1.png'
+  'custom-test':'face1.png'
 };
 
       if(imgMap[id]){
@@ -1657,7 +1679,8 @@ function openInventory(){
 
   box.innerHTML=ownedCharacters.map(id=>{
 const names={
-  'free-character':'Free Character',
+  'boy free character':'Free Boy',
+  'girl free character':'Free Girl',
   boy1:'Boy 1',
   boy2:'Boy 2',
   boy3:'Boy 3',
